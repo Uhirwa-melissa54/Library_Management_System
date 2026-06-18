@@ -21,11 +21,22 @@ public class Application {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
     public static void main(String[] args) {
-        System.out.println("Welcome to the Rwanda National Digital Library Management System");
+        System.out.println("==============================================");
+        System.out.println("  Welcome to Rwanda National Digital Library(Head to README for complete Guide)");
+        System.out.println("==============================================");
+        System.out.println("📌 System Login Guide:");
+        System.out.println(" - Enter 1 → Login as Librarian");
+        System.out.println(" - Enter 2 → Login as Member");
+        System.out.println(" - Enter 3 → Exit System");
+        System.out.println("==============================================");
+
+        System.out.println("👨‍🏫 Librarian IDs (for testing): 101, 102, 103, 999");
+        System.out.println("👤 Members must be registered in the system database");
+        System.out.println("==============================================");
 
         while (true) {
             System.out.println("\nSelect role:");
-            System.out.println("1. Librarian");
+            System.out.println("1. Librarian(Librarian IDs (for testing): 101, 102, 103, 999\")");
             System.out.println("2. Member");
             System.out.println("3. Exit Application");
             System.out.print("Enter choice: ");

@@ -1,3 +1,4 @@
+D:\Exam-embedded\LibrarySystem\src\main\java\com\library\dao\BorrowDAO.java
 D:\Exam-embedded\LibrarySystem\src\main\java\com\library\model\Member.java
 D:\Exam-embedded\LibrarySystem\src\main\java\com\library\service\LibraryService.java
 D:\Exam-embedded\LibrarySystem\src\main\java\com\library\task\BorrowTask.java
@@ -5,3 +6,5 @@ D:\Exam-embedded\LibrarySystem\src\main\java\com\library\util\DatabaseConnection
 D:\Exam-embedded\LibrarySystem\src\main\java\com\library\Main.java
 D:\Exam-embedded\LibrarySystem\src\main\java\com\library\model\Book.java
 D:\Exam-embedded\LibrarySystem\src\main\java\com\library\Application.java
+D:\Exam-embedded\LibrarySystem\src\main\java\com\library\dao\MemberDAO.java
+D:\Exam-embedded\LibrarySystem\src\main\java\com\library\dao\BookDAO.java
