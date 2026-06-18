@@ -3,4 +3,5 @@ com\library\Main.class
 com\library\service\LibraryService.class
 com\library\util\DatabaseConnection.class
 com\library\model\Member.class
+com\library\Application.class
 com\library\task\BorrowTask.class

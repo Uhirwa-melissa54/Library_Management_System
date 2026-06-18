@@ -180,4 +180,153 @@ public class LibraryService {
             bookLock.unlock();
         }
     }
+
+    /**
+     * Registers a new book in the database.
+     */
+    public boolean registerBook(Book book) {
+        String query = "INSERT INTO books (isbn, title, author, publication_year, is_available) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, book.getIsbn());
+            stmt.setString(2, book.getTitle());
+            stmt.setString(3, book.getAuthor());
+            stmt.setInt(4, book.getPublicationYear());
+            stmt.setBoolean(5, true);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error registering book: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Registers a new member in the database.
+     */
+    public int registerMember(String name) {
+        String query = "INSERT INTO members (name) VALUES (?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error registering member: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    /**
+     * Retrieves all books from the database.
+     */
+    public List<Book> getAllBooks() {
+        List<Book> books = new ArrayList<>();
+        String query = "SELECT isbn, title, author, publication_year FROM books";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                books.add(new Book(
+                        rs.getString("isbn"),
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getInt("publication_year")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching all books: " + e.getMessage());
+        }
+        return books;
+    }
+
+    /**
+     * Retrieves all members from the database.
+     */
+    public List<String> getAllMembers() {
+        List<String> members = new ArrayList<>();
+        String query = "SELECT member_id, name FROM members";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                members.add("ID: " + rs.getInt("member_id") + " | Name: " + rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching all members: " + e.getMessage());
+        }
+        return members;
+    }
+
+    /**
+     * Verifies if a member ID exists.
+     */
+    public boolean memberExists(int memberId) {
+        String query = "SELECT 1 FROM members WHERE member_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, memberId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error verifying member: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Retrieves the history of borrowing transactions.
+     */
+    public List<String> getBorrowingRecords() {
+        List<String> records = new ArrayList<>();
+        String query = "SELECT record_id, member_id, isbn, borrow_date, return_date FROM borrowing_records";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                records.add(String.format("Record: %d | Member: %d | ISBN: %s | Borrowed: %s | Returned: %s",
+                        rs.getInt("record_id"),
+                        rs.getInt("member_id"),
+                        rs.getString("isbn"),
+                        rs.getDate("borrow_date"),
+                        rs.getDate("return_date") != null ? rs.getDate("return_date") : "Not Returned"
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching borrowing records: " + e.getMessage());
+        }
+        return records;
+    }
+
+    /**
+     * Retrieves books currently borrowed by a specific member.
+     */
+    public List<Book> getMemberBorrowedBooks(int memberId) {
+        List<Book> books = new ArrayList<>();
+        String query = "SELECT b.isbn, b.title, b.author, b.publication_year FROM books b " +
+                       "JOIN borrowing_records r ON b.isbn = r.isbn " +
+                       "WHERE r.member_id = ? AND r.return_date IS NULL";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, memberId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    books.add(new Book(
+                            rs.getString("isbn"),
+                            rs.getString("title"),
+                            rs.getString("author"),
+                            rs.getInt("publication_year")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching member borrowed books: " + e.getMessage());
+        }
+        return books;
+    }
 }

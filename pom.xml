@@ -37,7 +37,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.library.Main</mainClass>
+                    <mainClass>com.library.Application</mainClass>
                 </configuration>
             </plugin>
         </plugins>
