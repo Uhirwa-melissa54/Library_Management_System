@@ -3,5 +3,8 @@ com\library\Main.class
 com\library\service\LibraryService.class
 com\library\util\DatabaseConnection.class
 com\library\model\Member.class
+com\library\dao\BookDAO.class
 com\library\Application.class
+com\library\dao\BorrowDAO.class
+com\library\dao\MemberDAO.class
 com\library\task\BorrowTask.class
